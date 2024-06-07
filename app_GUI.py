@@ -1,6 +1,9 @@
 import sys
 import random
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, QFrame, QInputDialog, QListWidget, QListWidgetItem, QMessageBox, QDialog
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton, 
+                             QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, 
+                             QFrame, QInputDialog, QListWidget, QListWidgetItem, 
+                             QDialog, QGridLayout)
 from PyQt5.QtCore import Qt
 
 class DeviceInfoWindow(QDialog):
@@ -27,15 +30,15 @@ class SmartHomeApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Smart App")
-        self.setGeometry(100, 100, 600, 400)  # x, y, širina, visina
+        self.setGeometry(100, 100, 800, 600)  # Increased the size
 
-        # Glavni widget i izgled
+        # Main widget and layout
         self.main_widget = QWidget()
         self.main_layout = QVBoxLayout()
         self.main_widget.setLayout(self.main_layout)
         self.setCentralWidget(self.main_widget)
 
-        # Izgled glavnog prozora
+        # Apply main window style
         self.setStyleSheet("""
             QMainWindow {
                 background-color: #f0f8ff;
@@ -61,14 +64,14 @@ class SmartHomeApp(QMainWindow):
             }
         """)
 
-        # Separator crta
+        # Separator line
         self.separator = QFrame()
         self.separator.setObjectName("separator")
         self.separator.setFrameShape(QFrame.HLine)
         self.separator.setFrameShadow(QFrame.Sunken)
         self.main_layout.addWidget(self.separator)
 
-        # Label za naslov
+        # Title label
         self.title_label = QLabel("Smart App", self)
         self.title_label.setAlignment(Qt.AlignCenter)
         self.title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
@@ -81,57 +84,62 @@ class SmartHomeApp(QMainWindow):
         self.separator.setFrameShadow(QFrame.Sunken)
         self.main_layout.addWidget(self.separator)
 
-        # Gornji dio s gumbovima
+        # Upper part with buttons
         self.button_frame = QFrame()
         self.button_layout = QHBoxLayout()
         self.button_frame.setLayout(self.button_layout)
         self.main_layout.addWidget(self.button_frame)
 
-        # Dugme 1 - Kišni mod
+        # Button 1 - Kišni mod
         self.button1 = QPushButton("Kišni mod", self)
         self.button1.clicked.connect(self.show_window1)
         self.button_layout.addWidget(self.button1)
 
-        # Dugme 2 - Pametni uređaji
+        # Button 2 - Pametni uređaji
         self.button2 = QPushButton("Pametni uređaji", self)
         self.button2.clicked.connect(self.show_window2)
         self.button_layout.addWidget(self.button2)
 
-        # Separator crta
+        # Button 3 - Rasvjeta
+        self.button3 = QPushButton("Rasvjeta", self)
+        self.button3.clicked.connect(self.show_window3)
+        self.button_layout.addWidget(self.button3)
+
+        # Separator line
         self.separator = QFrame()
         self.separator.setObjectName("separator")
         self.separator.setFrameShape(QFrame.HLine)
         self.separator.setFrameShadow(QFrame.Sunken)
         self.main_layout.addWidget(self.separator)
 
-        # Widget za više screenova
+        # Stacked widget to manage multiple screens
         self.stacked_widget = QStackedWidget()
         self.main_layout.addWidget(self.stacked_widget)
 
-        # Naslovnica
+        # Home screen
         self.home_screen = QWidget()
         self.home_layout = QVBoxLayout()
         self.home_screen.setLayout(self.home_layout)
 
-        # Unutrašnja temperatura label
+        # Indoor temperature label
         self.indoor_label = QLabel("Unutrašnja temperatura: -- °C", self)
         self.indoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.indoor_label)
 
-        # Vanjska temperatura label
+        # Outdoor temperature label
         self.outdoor_label = QLabel("Vanjska temperatura: -- °C", self)
         self.outdoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.outdoor_label)
 
-        # Dugme za ažuriranje
+        # Update button
         self.update_button = QPushButton("Ažuriraj temperaturu", self)
         self.update_button.clicked.connect(self.update_temperatures)
         self.home_layout.addWidget(self.update_button)
 
-        # Dodavanje naslovnice na widget
+        # Add home screen to stacked widget
         self.stacked_widget.addWidget(self.home_screen)
 
-        # Prozor 1 - Kišni mod
+        # Window 1 - Kišni mod
         self.window1 = QWidget()
         self.window1_layout = QVBoxLayout()
         self.window1.setLayout(self.window1_layout)
@@ -146,17 +154,17 @@ class SmartHomeApp(QMainWindow):
         self.window1_layout.addWidget(self.back_button1)
         self.stacked_widget.addWidget(self.window1)
 
-        # Prozor 2 - Pametni uređaji
+        # Window 2 - Pametni uređaji
         self.window2 = QWidget()
         self.window2_layout = QVBoxLayout()
         self.window2.setLayout(self.window2_layout)
 
-        # Lista uređaja preko widgeta
+        # Device list widget
         self.device_list = QListWidget()
         self.device_list.itemClicked.connect(self.show_device_info)
         self.window2_layout.addWidget(self.device_list)
 
-        # Dugme za dodati uređaj
+        # Add device button
         self.add_device_button = QPushButton("Dodaj uređaj", self)
         self.add_device_button.clicked.connect(self.add_device)
         self.window2_layout.addWidget(self.add_device_button)
@@ -165,22 +173,49 @@ class SmartHomeApp(QMainWindow):
         self.back_button2.clicked.connect(self.show_home)
         self.window2_layout.addWidget(self.back_button2)
 
-        # Dodavanje drugog prozora na stack widget
+        # Add window 2 to stacked widget
         self.stacked_widget.addWidget(self.window2)
 
-        # Dictionary za spremanje informacija
+        # Window 3 - Rasvjeta
+        self.window3 = QWidget()
+        self.window3_layout = QVBoxLayout()
+        self.window3.setLayout(self.window3_layout)
+
+        # Lighting control buttons
+        self.lighting_layout = QGridLayout()
+        self.window3.setLayout(self.window3_layout)
+        
+        # Add grid layout to the main layout of window3
+        self.window3_layout.addLayout(self.lighting_layout)
+        
+        # Add the buttons in a 3x2 grid format
+        for i in range(3):
+            on_button = QPushButton("Uključi", self)
+            self.lighting_layout.addWidget(on_button, i, 0)
+            
+            off_button = QPushButton("Isključi", self)
+            self.lighting_layout.addWidget(off_button, i, 1)
+
+        self.back_button3 = QPushButton("Povratak na glavni izbornik", self)
+        self.back_button3.clicked.connect(self.show_home)
+        self.window3_layout.addWidget(self.back_button3)
+
+        # Add window 3 to stacked widget
+        self.stacked_widget.addWidget(self.window3)
+
+        # Dictionary to store device information
         self.devices = {}
 
     def update_temperatures(self):
-        # Generiranje unutarnje temperature između 10 i 30 stupnjeva
+        # Generate a random indoor temperature between 10 and 30
         indoor_temp = random.uniform(10.0, 30.0)
 
-        # Generiranje odgovarajuće vanjske temperature
+        # Generate a corresponding outdoor temperature such that the difference is at most 10 degrees
         min_outdoor_temp = max(-10.0, indoor_temp - 10)
         max_outdoor_temp = min(40.0, indoor_temp + 10)
         outdoor_temp = random.uniform(min_outdoor_temp, max_outdoor_temp)
 
-        # Ažuriranje labela
+        # Update labels
         self.indoor_label.setText(f"Unutrašnja temperatura: {indoor_temp:.2f} °C")
         self.outdoor_label.setText(f"Vanjska temperatura: {outdoor_temp:.2f} °C")
 
@@ -192,6 +227,9 @@ class SmartHomeApp(QMainWindow):
 
     def show_window2(self):
         self.stacked_widget.setCurrentWidget(self.window2)
+
+    def show_window3(self):
+        self.stacked_widget.setCurrentWidget(self.window3)
 
     def toggle_shutters(self):
         if self.shutter_button.text() == "Otvori rolete":
@@ -206,12 +244,12 @@ class SmartHomeApp(QMainWindow):
             if ok:
                 room, ok = QInputDialog.getText(self, "Dodaj uređaj", "Unesite prostoriju za korištenje:")
                 if ok:
-                # Spremanje informacija od uređaja
+                    # Store device information
                     self.devices[device_name] = {"name": device_name, "type": device_type, "room": room}
-                # Dodavanje uređaja na widget listu
+                    # Add device to list widget
                     item = QListWidgetItem(device_name)
                     self.device_list.addItem(item)
-                # spremanje informacija o uređajima
+                    # Set data role to store device information
                     item.setData(Qt.UserRole, self.devices[device_name])
 
     def show_device_info(self, item):
@@ -219,14 +257,13 @@ class SmartHomeApp(QMainWindow):
         if device_info:
             info_window = DeviceInfoWindow(device_info)
             info_window.exec_()
-        
-        
-# stvaranje objekta
+
+# Create the application object
 app = QApplication(sys.argv)
 
-# glavni prozor
+# Create an instance of our main window
 window = SmartHomeApp()
 window.show()
 
-
+# Run the application event loop
 sys.exit(app.exec_())

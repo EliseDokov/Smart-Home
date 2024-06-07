@@ -1,48 +1,32 @@
-from datetime import datetime
+from random import uniform
 from sqlite3 import connect
+from time import sleep
 
 
 def main():
-    pass
+
+    # mock data generator
+
+    create_database("smart_home.db")
+
+    for _ in range(20):
+        temperatures = generate_temperatures()
+        store_temperature("smart_home.db", temperatures)
+        sleep(5)
 
 
-def now_sql() -> str:
-    """
-    Generates the current date and time in SQL datetime format.
+def generate_temperatures() -> tuple[float, float]:
 
-    This function retrieves the current local date and time, formats it according to
-    the standard SQL datetime format 'YYYY-MM-DD HH:MM:SS', and returns it as a string.
-
-    Returns:
-        str: The current date and time as a string in the format 'YYYY-MM-DD HH:MM:SS'.
-    """
-
-    now_datetime = datetime.now()
-    now_str = now_datetime.strftime(r"%Y-%m-%d %H:%M:%S")
-    return now_str
+    return (round(uniform(20.0, 20.5), 1), round(uniform(25.0, 25.5), 1))
 
 
 def create_database(database_path: str) -> None:
-    """
-    Creates a temperatures table in the specified SQLite database if it does not already exist.
-
-    This function connects to an SQLite database at the given path, creates a cursor, and
-    executes a SQL statement to create a table named 'temperatures' with the columns 'datetime',
-    'out_temp', and 'in_temp'. The table will be created only if it does not already exist.
-    Any errors during the connection, cursor creation, or SQL execution are caught and printed.
-
-    Args:
-        database_path (str): The file path to the SQLite database.
-
-    Returns:
-        None
-    """
 
     statement = """
         CREATE TABLE IF NOT EXISTS temperatures (
-            datetime     DATETIME     NOT NULL,
-            out_temp     FLOAT        NOT NULL,
-            in_temp      FLOAT        NOT NULL
+            measured_at     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            out_temp        FLOAT        NOT NULL,
+            in_temp         FLOAT        NOT NULL
         );
         """
 
@@ -64,31 +48,9 @@ def create_database(database_path: str) -> None:
             connection.close()
 
 
-def store_temperature(database_path: str, values: tuple[str, float, float]) -> None:
-    """
-    Inserts a temperature record into the temperatures table of the specified SQLite database.
+def store_temperature(database_path: str, values: tuple[float, float]) -> None:
 
-    This function connects to an SQLite database at the given path, creates a cursor,
-    and executes an SQL statement to insert a record into the 'temperatures' table with
-    the provided values for datetime, out_temp, and in_temp. Any errors during the
-    connection, cursor creation, or SQL execution are caught and printed.
-
-    Args:
-        database_path (str): The file path to the SQLite database.
-        values (tuple[str, float, float]): A tuple containing the datetime string,
-                                           outside temperature (float), and inside
-                                           temperature (float) to be inserted.
-
-    Returns:
-        None
-    """
-
-    statement = """
-        INSERT INTO temperatures
-            (datetime, out_temp, in_temp)
-        VALUES
-            (?, ?, ?);
-    """
+    statement = "INSERT INTO temperatures (out_temp, in_temp) VALUES (?, ?);"
 
     try:
         connection = connect(database_path)

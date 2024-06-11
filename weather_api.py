@@ -31,7 +31,7 @@ current_is_day = current.Variables(1).Value()
 current_rain = current.Variables(2).Value()
 
 now = datetime.now()
-#print(f"Timezone {response.Timezone()}")
+print(f"Timezone {response.Timezone()}")
 print(f"Current time {now.strftime("%d/%m/%Y %H:%M:%S")}")
 print(f"Current temperature_2m {current_temperature_2m:.2f}°C")
 print(f"Current is_day {int(current_is_day)}")

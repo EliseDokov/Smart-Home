@@ -33,8 +33,8 @@ from sensor import Sensor
 temperature_sensor = Sensor("smart_home.db", "temperature_sensor")
 
 # Pohranite temperature (vanjska, unutarnja)
-temperature_sensor.store_temperatures((22.5, 23.1))
-temperature_sensor.store_temperatures((24.0, 25.2))
+temperature_sensor.store_measurements((22.5, 23.1))
+temperature_sensor.store_measurements((24.0, 25.2))
 
 # Dohvatite sva mjerenja temperature
 measurements = temperature_sensor.get_measurements()

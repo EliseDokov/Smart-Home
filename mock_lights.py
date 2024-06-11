@@ -1,4 +1,8 @@
 import sqlite3
+import datetime
+
+now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
 
 class LightController:
     def __init__(self, db_file="light_state.db"):
@@ -8,29 +12,34 @@ class LightController:
     def _create_table(self):
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
-            cursor.execute('''
+
+            # Create the table with timestamp column
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS light_state (
-                    id INTEGER PRIMARY KEY,
+                    timestamp TEXT NOT NULL,
                     state TEXT NOT NULL
                 )
-            ''')
+            """)  # End of CREATE TABLE statement
+
             cursor.execute('''
-                INSERT OR IGNORE INTO light_state (id, state)
-                VALUES (1, 'off')
-            ''')
+                INSERT OR IGNORE INTO light_state (timestamp, state)
+                VALUES (?, ?)
+            ''', (now, 'off'))
+
             conn.commit()
 
-    def read_light_state(self):
-        with sqlite3.connect(self.db_file) as conn:
-            cursor = conn.cursor()
-            cursor.execute('SELECT state FROM light_state WHERE id = 1')
-            state = cursor.fetchone()[0]
-            return state
-
     def write_light_state(self, state):
+        """
+        Records the light state with a timestamp in the SQLite database.
+
+        """
+
         with sqlite3.connect(self.db_file) as conn:
             cursor = conn.cursor()
-            cursor.execute('UPDATE light_state SET state = ? WHERE id = 1', (state,))
+
+            # Insert the state and timestamp into the database
+            cursor.execute('INSERT INTO light_state (timestamp, state) VALUES (?, ?)', (now, state))
+
             conn.commit()
 
     def turn_on_light(self):
@@ -46,8 +55,10 @@ class LightController:
         print(f"The light is currently {state}.")
         return state
 
+
 def main():
     controller = LightController()
+    controller.turn_off_light()
 
     while True:
         action = input("Enter action (on/off/check/quit): ").strip().lower()
@@ -63,6 +74,7 @@ def main():
             break
         else:
             print("Invalid action. Please enter 'on', 'off', 'check', or 'quit'.")
+
 
 if __name__ == "__main__":
     main()

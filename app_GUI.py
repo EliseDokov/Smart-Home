@@ -1,10 +1,14 @@
 import sys
 import random
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton, 
-                             QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, 
-                             QFrame, QInputDialog, QListWidget, QListWidgetItem, 
-                             QDialog, QGridLayout)
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton,
+                             QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget,
+                             QFrame, QInputDialog, QListWidget,
+                             QListWidgetItem, QDialog, QGridLayout)
 from PyQt5.QtCore import Qt
+from mock_lights import LightController
+
+LightController = LightController()
+
 
 class DeviceInfoWindow(QDialog):
     def __init__(self, device_info):
@@ -24,6 +28,7 @@ class DeviceInfoWindow(QDialog):
         layout.addWidget(room_label)
 
         self.setLayout(layout)
+
 
 class SmartHomeApp(QMainWindow):
     def __init__(self):
@@ -194,13 +199,13 @@ class SmartHomeApp(QMainWindow):
         # Gumbi za rasvjetu
         self.lighting_layout = QGridLayout()
         self.window3.setLayout(self.window3_layout)
-        
+
         # dodavanje grida na glavni zaslon
         self.window3_layout.addLayout(self.lighting_layout)
-        
+
         # Naslov i gumbi u 3x2 formatu
         sections = ["Vanjska rasvjeta", "Dnevni boravak", "Balkonska svijetla"]
-        
+
         for i, section in enumerate(sections):
             title_label = QLabel(section)
             title_label.setContentsMargins(0, 7, 0, 7)  # Reduce the margins by 30%
@@ -210,7 +215,7 @@ class SmartHomeApp(QMainWindow):
             on_button.setStyleSheet("color: black;")  # Set text color to black
             on_button.clicked.connect(lambda _, row=i: self.on_button_clicked(row))
             self.lighting_layout.addWidget(on_button, i * 2 + 1, 0)
-            
+
             off_button = QPushButton("Isključi", self)
             off_button.setStyleSheet("color: black;")  # Set text color to black
             off_button.clicked.connect(lambda _, row=i: self.off_button_clicked(row))
@@ -257,7 +262,10 @@ class SmartHomeApp(QMainWindow):
         for col in range(self.lighting_layout.columnCount()):
             button = self.lighting_layout.itemAtPosition(row * 2 + 1, col).widget()
             if isinstance(button, QPushButton) and button.text() == "Uključi":
-                button.setStyleSheet("background-color: yellow; color: black;")  # Set background color to yellow and text color to black
+                # Set background color to yellow and text color to black
+                button.setStyleSheet("background-color: yellow; color: black;")
+                LightController.turn_on_light()
+                LightController.write_light_state("ON")
             else:
                 button.setStyleSheet("background-color: #4682b4; color: black;")  # Reset background color and text color
 
@@ -265,7 +273,10 @@ class SmartHomeApp(QMainWindow):
         for col in range(self.lighting_layout.columnCount()):
             button = self.lighting_layout.itemAtPosition(row * 2 + 1, col).widget()
             if isinstance(button, QPushButton) and button.text() == "Isključi":
-                button.setStyleSheet("background-color: #851c1c; color: black;")  # Set background color to dark red and text color to black
+                # Set background color to dark red and text color to black
+                button.setStyleSheet("background-color: #851c1c; color: black;")  
+                LightController.turn_off_light()
+                LightController.write_light_state("OFF")
             else:
                 button.setStyleSheet("background-color: #4682b4; color: black;")  # Reset background color and text color
 

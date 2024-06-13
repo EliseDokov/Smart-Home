@@ -35,7 +35,7 @@ print(f"Timezone {response.Timezone()}")
 print(f"Current time {now.strftime("%d/%m/%Y %H:%M:%S")}")
 print(f"Current temperature_2m {current_temperature_2m:.2f}°C")
 print(f"Current is_day {int(current_is_day)}")
-print(f"Current rain {current_rain}mm")
+print(f"Current rain {current_rain:.2f}mm")
 
 
 

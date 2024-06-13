@@ -1,64 +1,30 @@
 import sqlite3
 import datetime
-
-now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+from devices import Device
 
 class LightController:
-    def __init__(self, db_file="light_state.db"):
-        self.db_file = db_file
-        self._create_table()
-
-    def _create_table(self):
-        with sqlite3.connect(self.db_file) as conn:
-            cursor = conn.cursor()
-
-            # Create the table with timestamp column
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS light_state (
-                    timestamp TEXT NOT NULL,
-                    state TEXT NOT NULL
-                )
-            """)  # End of CREATE TABLE statement
-
-            cursor.execute('''
-                INSERT OR IGNORE INTO light_state (timestamp, state)
-                VALUES (?, ?)
-            ''', (now, 'off'))
-
-            conn.commit()
-
-    def write_light_state(self, state):
-        """
-        Records the light state with a timestamp in the SQLite database.
-
-        """
-
-        with sqlite3.connect(self.db_file) as conn:
-            cursor = conn.cursor()
-
-            # Insert the state and timestamp into the database
-            cursor.execute('INSERT INTO light_state (timestamp, state) VALUES (?, ?)', (now, state))
-
-            conn.commit()
+    def __init__(self, device):
+        self.device = device
 
     def turn_on_light(self):
-        self.write_light_state("on")
+        self.device.store_state(1)
         print("The light is turned on.")
 
     def turn_off_light(self):
-        self.write_light_state("off")
+        self.device.store_state(0)
         print("The light is turned off.")
 
     def check_light_state(self):
-        state = self.read_light_state()
+        state = self.device.get_states()
         print(f"The light is currently {state}.")
         return state
 
+    def read_light_state(self):
+        state
+
 
 def main():
-    controller = LightController()
-    controller.turn_off_light()
+    controller = LightController(Device)
 
     while True:
         action = input("Enter action (on/off/check/quit): ").strip().lower()
@@ -68,7 +34,7 @@ def main():
         elif action == "off":
             controller.turn_off_light()
         elif action == "check":
-            controller.check_light_state()
+            controller.check_light_state() ##currently not working
         elif action == "quit":
             print("Exiting the light controller.")
             break

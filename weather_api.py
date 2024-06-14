@@ -16,7 +16,7 @@ url = "https://api.open-meteo.com/v1/forecast"
 params = {
 	"latitude": 45.8144,
 	"longitude": 15.978,
-	"current": ["temperature_2m", "is_day", "rain"],
+	"current": ["temperature_2m", "is_day", "rain", "snowfall", "cloud_cover"],
 	"timezone": "auto"
 }
 responses = openmeteo.weather_api(url, params=params)
@@ -29,6 +29,8 @@ current = response.Current()
 current_temperature_2m = current.Variables(0).Value()
 current_is_day = current.Variables(1).Value()
 current_rain = current.Variables(2).Value()
+snowfall = current.Variables(3).Value()
+cloud_cover = current.Variables(4).Value()
 
 now = datetime.now()
 print(f"Timezone {response.Timezone()}")
@@ -36,6 +38,9 @@ print(f"Current time {now.strftime("%d/%m/%Y %H:%M:%S")}")
 print(f"Current temperature_2m {current_temperature_2m:.2f}°C")
 print(f"Current is_day {int(current_is_day)}")
 print(f"Current rain {current_rain:.2f}mm")
+print(f"Current snowfall {snowfall:.2f}mm")
+print(f"Current cloud_cover {cloud_cover:.2f}%")
+
 
 
 

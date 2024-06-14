@@ -179,6 +179,11 @@ class SmartHomeApp(QMainWindow):
         self.add_device_button.clicked.connect(self.add_device)
         self.window2_layout.addWidget(self.add_device_button)
 
+        # Gumb za izbrisi uređaj
+        self.delete_device_button = QPushButton("Izbriši uređaj", self)
+        self.delete_device_button.clicked.connect(self.delete_device)
+        self.window2_layout.addWidget(self.delete_device_button)
+
         self.back_button2 = QPushButton("Povratak na glavni izbornik", self)
         self.back_button2.clicked.connect(self.show_home)
         self.window2_layout.addWidget(self.back_button2)
@@ -228,12 +233,20 @@ class SmartHomeApp(QMainWindow):
         self.window4_layout = QVBoxLayout()
         self.window4.setLayout(self.window4_layout)
 
-        # Labela rasporeda zadataka
-        self.task_label = QLabel("Raspored zadataka: --", self)
-        self.task_label.setAlignment(Qt.AlignCenter)
-        self.window4_layout.addWidget(self.task_label)
+        # Lista zadataka
+        self.task_list = QListWidget()
+        self.window4_layout.addWidget(self.task_list)
 
-        # Gumb za povratak u prozoru 4
+        # Gumb za dodaj zadatak
+        self.add_task_button = QPushButton("Dodaj zadatak", self)
+        self.add_task_button.clicked.connect(self.add_task)
+        self.window4_layout.addWidget(self.add_task_button)
+
+        # Gumb za izbrisi zadatak
+        self.delete_task_button = QPushButton("Izbriši zadatak", self)
+        self.delete_task_button.clicked.connect(self.delete_task)
+        self.window4_layout.addWidget(self.delete_task_button)
+
         self.back_button4 = QPushButton("Povratak na glavni izbornik", self)
         self.back_button4.clicked.connect(self.show_home)
         self.window4_layout.addWidget(self.back_button4)
@@ -243,6 +256,7 @@ class SmartHomeApp(QMainWindow):
 
         # Dictionary za spremanje informacija
         self.devices = {}
+        self.tasks = {}
 
     def on_button_clicked(self, row):
         for col in range(self.lighting_layout.columnCount()):
@@ -315,18 +329,50 @@ class SmartHomeApp(QMainWindow):
                     # Uloga uređaja
                     item.setData(Qt.UserRole, self.devices[device_name])
 
+    def delete_device(self):
+        selected_item = self.device_list.currentItem()
+        if selected_item:
+            device_name = selected_item.data(Qt.UserRole)["name"]
+            # Uklanjanje iz dict-a
+            if device_name in self.devices:
+                del self.devices[device_name]
+            # Uklanjanje iz widget liste
+            self.device_list.takeItem(self.device_list.row(selected_item))
+
     def show_device_info(self, item):
         device_info = item.data(Qt.UserRole)
         if device_info:
             info_window = DeviceInfoWindow(device_info)
             info_window.exec_()
 
+    def add_task(self):
+        person_name, ok = QInputDialog.getText(self, "Dodaj zadatak", "Unesite ime osobe:")
+        if ok:
+            task_description, ok = QInputDialog.getText(self, "Dodaj zadatak", "Unesite zadatak:")
+            if ok:
+                # Spremanje informacija o zadatku
+                self.tasks[person_name] = {"name": person_name, "task": task_description}
+                # Dodavanje zadatka na widget listu
+                item = QListWidgetItem(f"{person_name}: {task_description}")
+                self.task_list.addItem(item)
+                # Uloga zadatka
+                item.setData(Qt.UserRole, self.tasks[person_name])
+
+    def delete_task(self):
+        selected_item = self.task_list.currentItem()
+        if selected_item:
+            person_name = selected_item.data(Qt.UserRole)["name"]
+            # Uklanjanje iz dict-a
+            if person_name in self.tasks:
+                del self.tasks[person_name]
+            # Uklanjanje iz widget liste
+            self.task_list.takeItem(self.task_list.row(selected_item))
+
 
 app = QApplication(sys.argv)
-
 
 window = SmartHomeApp()
 window.show()
 
-
+# Run the application event loop
 sys.exit(app.exec_())

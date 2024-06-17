@@ -7,6 +7,8 @@ Ovaj Python modul pruža funkcije za dohvaćanje trenutne temperature za određe
 Kombiniraj dvije funkcije kako bi se dobila preporuka za odjeću na temelju trenutne temperature u "Zagreb-Maksimiru" izražene emoji-jima.
 
 ```python
+from emoji_clothes import get_emoji, get_temp
+
 print(get_emoji(get_temp()))
 ```
 
@@ -15,6 +17,8 @@ print(get_emoji(get_temp()))
 Dohvaća temperaturu za određeni grad putem hrvatskog vremenskog API-ja.
 
 ```python
+from emoji_clothes import get_temp
+
 temperatura = get_temp("Zagreb-Maksimir")
 
 print(f"Temperatura u Zagrebu-Maksimiru je {temperatura}°C")
@@ -34,6 +38,8 @@ print(f"Temperatura u Zagrebu-Maksimiru je {temperatura}°C")
 Vraća niz emoji-ja koji predstavlja odgovarajuću odjeću za zadatu temperaturu.
 
 ```python
+from emoji_clothes import get_emoji
+
 emoji_odjeće = get_emoji(25.0)
 
 print(f"Preporučena odjeća za 25°C: {emoji_odjeće}")

@@ -8,11 +8,19 @@ from PyQt5.QtCore import Qt
 from mock_lights import LightController
 from live_clock import LiveClock
 from vrijeme import Vrijeme
+from temperature_recorder import TemperatureMonitor
+
 
 LightController = LightController()
 url = "https://vrijeme.hr/hrvatska_n.xml"
 vrijeme = Vrijeme(url)
 vrijeme.fetch_weather_data()
+
+
+db_path = "temperatures.db"
+temperature_monitor = TemperatureMonitor(db_path)
+temperature = temperature_monitor.update_temperatures()
+
 
 class DeviceInfoWindow(QDialog):
     def __init__(self, device_info):
@@ -32,6 +40,7 @@ class DeviceInfoWindow(QDialog):
         layout.addWidget(room_label)
 
         self.setLayout(layout)
+
 
 class SmartHomeApp(QMainWindow):
     def __init__(self):
@@ -146,12 +155,12 @@ class SmartHomeApp(QMainWindow):
         self.home_screen.setLayout(self.home_layout)
 
         # Unutrašnja temperatura
-        self.indoor_label = QLabel("Temperatura u kući: -- °C", self)
+        self.indoor_label = QLabel(f"Temperatura u kući: {temperature[0]:.1f} °C", self)
         self.indoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.indoor_label)
 
         # Vanjska temperatura
-        self.outdoor_label = QLabel("Vlažnost zraka u kući: -- %", self)
+        self.outdoor_label = QLabel(f"Vlažnost zraka u kući: {temperature[1]:.0f} %", self)
         self.outdoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.outdoor_label)
 
@@ -225,13 +234,13 @@ class SmartHomeApp(QMainWindow):
         # Gumbi za rasvjetu
         self.lighting_layout = QGridLayout()
         self.window3.setLayout(self.window3_layout)
-        
+
         # dodavanje grida na glavni zaslon
         self.window3_layout.addLayout(self.lighting_layout)
-        
+
         # Naslov i gumbi u 3x2 formatu
         sections = ["Vanjska rasvjeta", "Dnevni boravak", "Balkonska svijetla"]
-        
+
         for i, section in enumerate(sections):
             title_label = QLabel(section)
             title_label.setContentsMargins(0, 7, 0, 7)  # Reduce the margins by 30%
@@ -241,7 +250,7 @@ class SmartHomeApp(QMainWindow):
             on_button.setStyleSheet("color: black;")  # Set text color to black
             on_button.clicked.connect(lambda _, row=i: self.on_button_clicked(row))
             self.lighting_layout.addWidget(on_button, i * 2 + 1, 0)
-            
+
             off_button = QPushButton("Isključi", self)
             off_button.setStyleSheet("color: black;")  # Set text color to black
             off_button.clicked.connect(lambda _, row=i: self.off_button_clicked(row))
@@ -302,18 +311,11 @@ class SmartHomeApp(QMainWindow):
 
     def update_temperatures(self):
         # Generiranje nasumične temperature između 10 i 30 stupnjeva C
-        indoor_temp = random.uniform(10.0, 30.0)
+        temperature = temperature_monitor.update_temperatures()
 
-        # Odgovarajuća vanjska temperatura, ali da nije više od 10 stupnjeva razliek
-        min_outdoor_temp = max(-10.0, indoor_temp - 10)
-        max_outdoor_temp = min(50.0, indoor_temp + 20)
-        outdoor_temp = random.uniform(min_outdoor_temp, max_outdoor_temp)
-        pressure = min(1050, indoor_temp + 950)
+        self.indoor_label.setText(f"Unutrašnja temperatura: {temperature[0]:.1f} °C")
+        self.outdoor_label.setText(f"Vlažnost u kući: {temperature[1]:.0f} %")
 
-        # Ažuriranje labela
-        self.indoor_label.setText(f"Unutrašnja temperatura: {indoor_temp:.2f} °C")
-        self.outdoor_label.setText(f"Vlažnost u kući: {outdoor_temp:.2f} %")
-        
 
     def show_home(self):
         self.stacked_widget.setCurrentWidget(self.home_screen)

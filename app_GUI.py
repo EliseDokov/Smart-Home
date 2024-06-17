@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton,
                              QListWidgetItem, QDialog, QGridLayout)
 from PyQt5.QtCore import Qt
 from mock_lights import LightController
+from live_clock import LiveClock
 
 LightController = LightController()
 
@@ -41,6 +42,17 @@ class SmartHomeApp(QMainWindow):
         self.main_widget = QWidget()
         self.main_layout = QVBoxLayout()
         self.main_widget.setLayout(self.main_layout)
+
+        # Create a horizontal layout for the clock
+        clock_layout = QHBoxLayout()
+        # Add stretch to push the clock to the right
+        clock_layout.addStretch()
+        # Create an instance of LiveClock and add it to the clock layout
+        clock = LiveClock()
+        clock_layout.addWidget(clock)
+        # Add the clock layout to the main layout
+        self.main_layout.addLayout(clock_layout)
+
         self.setCentralWidget(self.main_widget)
 
         # izgled glavnog prozora

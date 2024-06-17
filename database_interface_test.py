@@ -24,9 +24,9 @@ def main():
         vacuum_cleaner.store_state(0)
         sleep(5)
 
-    # Fetch rows from tables
-    print(vacuum_cleaner.get_states())
-    print(temperature_sensor.get_measurements())
+        # Fetch rows from tables
+        print(vacuum_cleaner.get_states())
+#        print(temperature_sensor.get_measurements())
 
 
 if __name__ == "__main__":

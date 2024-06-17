@@ -7,9 +7,12 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton,
 from PyQt5.QtCore import Qt
 from mock_lights import LightController
 from live_clock import LiveClock
+from vrijeme import Vrijeme
 
 LightController = LightController()
-
+url = "https://vrijeme.hr/hrvatska_n.xml"
+vrijeme = Vrijeme(url)
+vrijeme.fetch_weather_data()
 
 class DeviceInfoWindow(QDialog):
     def __init__(self, device_info):
@@ -166,19 +169,19 @@ class SmartHomeApp(QMainWindow):
         self.window1.setLayout(self.window1_layout)
 
         # Dodavanje meteo informacija
-        self.city_label = QLabel("Grad: --", self)
+        self.city_label = QLabel(f"Grad: {vrijeme.get_location()}", self)
         self.city_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.city_label)
 
-        self.current_temp_label = QLabel("Trenutna temperatura: -- °C", self)
+        self.current_temp_label = QLabel(f"Trenutna temperatura: {vrijeme.get_temperature()}°C", self)
         self.current_temp_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.current_temp_label)
 
-        self.pressure_label = QLabel("Tlak zraka: -- hPa", self)
+        self.pressure_label = QLabel(f"Tlak zraka: {vrijeme.get_pressure()} hPa", self)
         self.pressure_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.pressure_label)
 
-        self.humidity_label = QLabel("Vlažnost zraka: -- %", self)
+        self.humidity_label = QLabel(f"Vlažnost zraka: {vrijeme.get_humidity()} %", self)
         self.humidity_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.humidity_label)
 

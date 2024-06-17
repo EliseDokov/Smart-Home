@@ -4,3 +4,5 @@ PyQt5==5.15.10
 PyQt5_sip==12.13.0
 requests_cache==1.2.0
 retry_requests==2.0.0
+lxml==5.2.2
+

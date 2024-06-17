@@ -1,10 +1,10 @@
-## Funkcije za Vrijeme i Emoji odjeće
+## Funkcije za Vrijeme i Emoji odjece
 
-Ovaj Python modul pruža funkcije za dohvaćanje trenutne temperature za određeni grad putem hrvatskog vremenskog API-ja te za određivanje odgovarajućeg emoji-ja odjeće na temelju temperature.
+Ovaj Python modul pruza funkcije za dohvacanje trenutne temperature za odredeni grad putem hrvatskog vremenskog API-ja te za odredivanje odgovarajuceg emoji-ja odjece na temelju temperature.
 
 ### TL;DR
 
-Kombiniraj dvije funkcije kako bi se dobila preporuka za odjeću na temelju trenutne temperature u "Zagreb-Maksimiru" izražene emoji-jima.
+Kombiniraj dvije funkcije kako bi se dobila preporuka za odjecu na temelju trenutne temperature u "Zagreb-Maksimiru" izrazene emoji-jima.
 
 ```python
 from emoji_clothes import get_emoji, get_temp
@@ -14,19 +14,19 @@ print(get_emoji(get_temp()))
 
 ### Funkcija `get_temp`
 
-Dohvaća temperaturu za određeni grad putem hrvatskog vremenskog API-ja.
+Dohvaca temperaturu za odredeni grad putem hrvatskog vremenskog API-ja.
 
 ```python
 from emoji_clothes import get_temp
 
 temperatura = get_temp("Zagreb-Maksimir")
 
-print(f"Temperatura u Zagrebu-Maksimiru je {temperatura}°C")
+print(f"Temperatura u Zagrebu-Maksimiru je {temperatura}_C")
 ```
 
 - **Argumenti**
 
-  - Naziv grada za koji želite dohvatiti temperaturu. `(str)`
+  - Naziv grada za koji zelite dohvatiti temperaturu. `(str)`
   - Zadano je `"Zagreb-Maksimir"`
 
 - **Povratna vrijednost**:
@@ -35,14 +35,14 @@ print(f"Temperatura u Zagrebu-Maksimiru je {temperatura}°C")
 
 ### Funkcija `get_emoji`
 
-Vraća niz emoji-ja koji predstavlja odgovarajuću odjeću za zadatu temperaturu.
+Vraca niz emoji-ja koji predstavlja odgovarajucu odjecu za zadatu temperaturu.
 
 ```python
 from emoji_clothes import get_emoji
 
-emoji_odjeće = get_emoji(25.0)
+emoji_odjece = get_emoji(25.0)
 
-print(f"Preporučena odjeća za 25°C: {emoji_odjeće}")
+print(f"Preporucena odjeca za 25_C: {emoji_odjece}")
 ```
 
 - **Argumenti**
@@ -51,15 +51,15 @@ print(f"Preporučena odjeća za 25°C: {emoji_odjeće}")
 
 - **Povratna vrijednost**:
 
-  - Niz emoji-ja koji predstavlja preporučenu odjeću na temelju temperature. `(str)`
+  - Niz emoji-ja koji predstavlja preporucenu odjecu na temelju temperature. `(str)`
 
 ## Smart Home Database Interface
 
-Ovaj projekt omogućava upravljanje uređajima i senzorima u pametnom domu koristeći SQLite bazu podataka. Pruža dvije glavne klase: `Device` i `Sensor`.
+Ovaj projekt omogucava upravljanje uredajima i senzorima u pametnom domu koristeci SQLite bazu podataka. Pruza dvije glavne klase: `Device` i `Sensor`.
 
 ### Klasa `Device`
 
-Klasa `Device` omogućava upravljanje stanjem uređaja u bazi podataka.
+Klasa `Device` omogucava upravljanje stanjem uredaja u bazi podataka.
 
 ```python
 from device import Device
@@ -67,11 +67,11 @@ from device import Device
 # Kreirajte instancu klase Device
 vacuum_cleaner = Device("smart_home.db", "vacuum_cleaner")
 
-# Pohranite stanje uređaja (0 ili 1)
+# Pohranite stanje uredaja (0 ili 1)
 vacuum_cleaner.store_state(1)
 vacuum_cleaner.store_state(0)
 
-# Dohvatite sva stanja uređaja
+# Dohvatite sva stanja uredaja
 states = vacuum_cleaner.get_states()
 print(states)
 
@@ -79,7 +79,7 @@ print(states)
 
 ### Klasa `Sensor`
 
-Klasa `Sensor` omogućava pohranu senzorskih mjerenja u bazi podataka.
+Klasa `Sensor` omogucava pohranu senzorskih mjerenja u bazi podataka.
 
 ```python
 from sensor import Sensor

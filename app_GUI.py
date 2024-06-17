@@ -146,12 +146,12 @@ class SmartHomeApp(QMainWindow):
         self.home_screen.setLayout(self.home_layout)
 
         # Unutrašnja temperatura
-        self.indoor_label = QLabel("Unutrašnja temperatura: -- °C", self)
+        self.indoor_label = QLabel("Temperatura u kući: -- °C", self)
         self.indoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.indoor_label)
 
         # Vanjska temperatura
-        self.outdoor_label = QLabel("Vanjska temperatura: -- °C", self)
+        self.outdoor_label = QLabel("Vlažnost zraka u kući: -- %", self)
         self.outdoor_label.setAlignment(Qt.AlignCenter)
         self.home_layout.addWidget(self.outdoor_label)
 
@@ -306,12 +306,14 @@ class SmartHomeApp(QMainWindow):
 
         # Odgovarajuća vanjska temperatura, ali da nije više od 10 stupnjeva razliek
         min_outdoor_temp = max(-10.0, indoor_temp - 10)
-        max_outdoor_temp = min(40.0, indoor_temp + 10)
+        max_outdoor_temp = min(50.0, indoor_temp + 20)
         outdoor_temp = random.uniform(min_outdoor_temp, max_outdoor_temp)
+        pressure = min(1050, indoor_temp + 950)
 
         # Ažuriranje labela
         self.indoor_label.setText(f"Unutrašnja temperatura: {indoor_temp:.2f} °C")
-        self.outdoor_label.setText(f"Vanjska temperatura: {outdoor_temp:.2f} °C")
+        self.outdoor_label.setText(f"Vlažnost u kući: {outdoor_temp:.2f} %")
+        
 
     def show_home(self):
         self.stacked_widget.setCurrentWidget(self.home_screen)

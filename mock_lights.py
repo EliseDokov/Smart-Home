@@ -56,6 +56,11 @@ class LightController:
         return state
 
 
+
+    def read_light_state(self):
+        state
+        
+
 def main():
     controller = LightController()
     controller.turn_off_light()

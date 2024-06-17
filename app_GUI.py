@@ -1,9 +1,9 @@
 import sys
 import random
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton,
-                             QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget,
-                             QFrame, QInputDialog, QListWidget,
-                             QListWidgetItem, QDialog, QGridLayout)
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QPushButton, 
+                             QVBoxLayout, QHBoxLayout, QWidget, QStackedWidget, 
+                             QFrame, QInputDialog, QListWidget, QListWidgetItem, 
+                             QDialog, QGridLayout)
 from PyQt5.QtCore import Qt
 from mock_lights import LightController
 from live_clock import LiveClock
@@ -29,7 +29,6 @@ class DeviceInfoWindow(QDialog):
         layout.addWidget(room_label)
 
         self.setLayout(layout)
-
 
 class SmartHomeApp(QMainWindow):
     def __init__(self):
@@ -108,7 +107,7 @@ class SmartHomeApp(QMainWindow):
         self.main_layout.addWidget(self.button_frame)
 
         # Gumb 1 - Kišni mod
-        self.button1 = QPushButton("Kišni mod", self)
+        self.button1 = QPushButton("Meteo", self)
         self.button1.clicked.connect(self.show_window1)
         self.button_layout.addWidget(self.button1)
 
@@ -161,16 +160,28 @@ class SmartHomeApp(QMainWindow):
         # Dodavanje naslovnice na widget
         self.stacked_widget.addWidget(self.home_screen)
 
-        # Prozor 1 - Kišni mod
+        # Prozor 1 - Kišni mod (Meteo)
         self.window1 = QWidget()
         self.window1_layout = QVBoxLayout()
         self.window1.setLayout(self.window1_layout)
-        self.shutter_button = QPushButton("Otvori rolete", self)
-        self.shutter_button.clicked.connect(self.toggle_shutters)
-        self.window1_layout.addWidget(self.shutter_button)
-        self.weather_label = QLabel("Izvještaj vremena: --", self)
-        self.weather_label.setAlignment(Qt.AlignCenter)
-        self.window1_layout.addWidget(self.weather_label)
+
+        # Dodavanje meteo informacija
+        self.city_label = QLabel("Grad: --", self)
+        self.city_label.setAlignment(Qt.AlignCenter)
+        self.window1_layout.addWidget(self.city_label)
+
+        self.current_temp_label = QLabel("Trenutna temperatura: -- °C", self)
+        self.current_temp_label.setAlignment(Qt.AlignCenter)
+        self.window1_layout.addWidget(self.current_temp_label)
+
+        self.pressure_label = QLabel("Tlak zraka: -- hPa", self)
+        self.pressure_label.setAlignment(Qt.AlignCenter)
+        self.window1_layout.addWidget(self.pressure_label)
+
+        self.humidity_label = QLabel("Vlažnost zraka: -- %", self)
+        self.humidity_label.setAlignment(Qt.AlignCenter)
+        self.window1_layout.addWidget(self.humidity_label)
+
         self.back_button1 = QPushButton("Povratak na glavni izbornik", self)
         self.back_button1.clicked.connect(self.show_home)
         self.window1_layout.addWidget(self.back_button1)
@@ -211,13 +222,13 @@ class SmartHomeApp(QMainWindow):
         # Gumbi za rasvjetu
         self.lighting_layout = QGridLayout()
         self.window3.setLayout(self.window3_layout)
-
+        
         # dodavanje grida na glavni zaslon
         self.window3_layout.addLayout(self.lighting_layout)
-
+        
         # Naslov i gumbi u 3x2 formatu
         sections = ["Vanjska rasvjeta", "Dnevni boravak", "Balkonska svijetla"]
-
+        
         for i, section in enumerate(sections):
             title_label = QLabel(section)
             title_label.setContentsMargins(0, 7, 0, 7)  # Reduce the margins by 30%
@@ -227,7 +238,7 @@ class SmartHomeApp(QMainWindow):
             on_button.setStyleSheet("color: black;")  # Set text color to black
             on_button.clicked.connect(lambda _, row=i: self.on_button_clicked(row))
             self.lighting_layout.addWidget(on_button, i * 2 + 1, 0)
-
+            
             off_button = QPushButton("Isključi", self)
             off_button.setStyleSheet("color: black;")  # Set text color to black
             off_button.clicked.connect(lambda _, row=i: self.off_button_clicked(row))
@@ -274,10 +285,7 @@ class SmartHomeApp(QMainWindow):
         for col in range(self.lighting_layout.columnCount()):
             button = self.lighting_layout.itemAtPosition(row * 2 + 1, col).widget()
             if isinstance(button, QPushButton) and button.text() == "Uključi":
-                # Set background color to yellow and text color to black
-                button.setStyleSheet("background-color: yellow; color: black;")
-                LightController.turn_on_light()
-                LightController.write_light_state("ON")
+                button.setStyleSheet("background-color: yellow; color: black;")  # Set background color to yellow and text color to black
             else:
                 button.setStyleSheet("background-color: #4682b4; color: black;")  # Reset background color and text color
 
@@ -285,10 +293,7 @@ class SmartHomeApp(QMainWindow):
         for col in range(self.lighting_layout.columnCount()):
             button = self.lighting_layout.itemAtPosition(row * 2 + 1, col).widget()
             if isinstance(button, QPushButton) and button.text() == "Isključi":
-                # Set background color to dark red and text color to black
-                button.setStyleSheet("background-color: #851c1c; color: black;")  
-                LightController.turn_off_light()
-                LightController.write_light_state("OFF")
+                button.setStyleSheet("background-color: #851c1c; color: black;")  # Set background color to dark red and text color to black
             else:
                 button.setStyleSheet("background-color: #4682b4; color: black;")  # Reset background color and text color
 

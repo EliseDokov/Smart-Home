@@ -18,9 +18,6 @@ def get_temp(city: str = "Zagreb-Maksimir") -> float:
     Returns:
         float: The temperature of the specified city. Returns "N/A" if the
                city or temperature data is not found.
-
-    Raises:
-        ValueError: If the temperature data cannot be converted to a float.
     """
 
     url = "https://vrijeme.hr/hrvatska_n.xml"

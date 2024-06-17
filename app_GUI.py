@@ -8,8 +8,12 @@ from PyQt5.QtCore import Qt
 from mock_lights import LightController
 from live_clock import LiveClock
 from vrijeme import Vrijeme
+<<<<<<< HEAD
 from temperature_recorder import TemperatureMonitor
 
+=======
+import emoji_clothes
+>>>>>>> b4fe822bec99a737caee5d2750480a176134fdd7
 
 LightController = LightController()
 url = "https://vrijeme.hr/hrvatska_n.xml"
@@ -17,17 +21,19 @@ vrijeme = Vrijeme(url)
 vrijeme.fetch_weather_data()
 
 
+<<<<<<< HEAD
 db_path = "temperatures.db"
 temperature_monitor = TemperatureMonitor(db_path)
 temperature = temperature_monitor.update_temperatures()
 
 
+=======
+>>>>>>> b4fe822bec99a737caee5d2750480a176134fdd7
 class DeviceInfoWindow(QDialog):
     def __init__(self, device_info):
         super().__init__()
         self.setWindowTitle(device_info["name"])
         self.setGeometry(100, 100, 300, 200)  # x, y, width, height
-
         layout = QVBoxLayout()
 
         name_label = QLabel(f"Name: {device_info['name']}", self)
@@ -65,6 +71,8 @@ class SmartHomeApp(QMainWindow):
         self.main_layout.addLayout(clock_layout)
 
         self.setCentralWidget(self.main_widget)
+
+        self.emoji = emoji_clothes.get_emoji(float(vrijeme.get_temperature()))
 
         # izgled glavnog prozora
         self.setStyleSheet("""
@@ -182,7 +190,7 @@ class SmartHomeApp(QMainWindow):
         self.city_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.city_label)
 
-        self.current_temp_label = QLabel(f"Trenutna temperatura: {vrijeme.get_temperature()}°C", self)
+        self.current_temp_label = QLabel(f"Trenutna temperatura: {vrijeme.get_temperature()}°C {self.emoji}", self)
         self.current_temp_label.setAlignment(Qt.AlignCenter)
         self.window1_layout.addWidget(self.current_temp_label)
 

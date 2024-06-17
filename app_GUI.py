@@ -8,12 +8,9 @@ from PyQt5.QtCore import Qt
 from mock_lights import LightController
 from live_clock import LiveClock
 from vrijeme import Vrijeme
-<<<<<<< HEAD
 from temperature_recorder import TemperatureMonitor
 
-=======
 import emoji_clothes
->>>>>>> b4fe822bec99a737caee5d2750480a176134fdd7
 
 LightController = LightController()
 url = "https://vrijeme.hr/hrvatska_n.xml"
@@ -21,14 +18,11 @@ vrijeme = Vrijeme(url)
 vrijeme.fetch_weather_data()
 
 
-<<<<<<< HEAD
 db_path = "temperatures.db"
 temperature_monitor = TemperatureMonitor(db_path)
 temperature = temperature_monitor.update_temperatures()
 
 
-=======
->>>>>>> b4fe822bec99a737caee5d2750480a176134fdd7
 class DeviceInfoWindow(QDialog):
     def __init__(self, device_info):
         super().__init__()
